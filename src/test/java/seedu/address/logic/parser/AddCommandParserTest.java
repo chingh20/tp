@@ -24,7 +24,7 @@ import seedu.address.testutil.GameEntryBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+
 
 
 public class AddCommandParserTest {
@@ -78,7 +78,7 @@ public class AddCommandParserTest {
 
 
 
-    private AddCommandParser parser = new AddCommandParser();
+    private final AddCommandParser parser = new AddCommandParser();
 
 
 
@@ -128,7 +128,7 @@ public class AddCommandParserTest {
         assertParseSuccess(parser,      GAMETYPE_VALID_GAMETYPE_1 + STARTAMOUNT_VALID_STARTAMOUNT_1
                         + ENDAMOUNT_VALID_ENDAMOUNT_1 + DATE_VALID_DATE_1 + DURATION_VALID_DURATION_1
                         + LOCATION_VALID_LOCATION_1 + TAG_VALID_TAG_1
-                        + TAG_VALID_TAG_2, new AddCommand(expectedGameEntryMultipleTags)));
+                        + TAG_VALID_TAG_2, new AddCommand(expectedGameEntryMultipleTags));
     }
 
     @Test
@@ -157,7 +157,8 @@ public class AddCommandParserTest {
             // no location
             GameEntry expectedGameEntryNoLocation = new GameEntryBuilder(GAME_1).withLocation("").build();
             assertParseSuccess(parser, GAMETYPE_VALID_GAMETYPE_1 + STARTAMOUNT_VALID_STARTAMOUNT_1
-                    + ENDAMOUNT_VALID_ENDAMOUNT_1 + DATE_VALID_DATE_1, new AddCommand(expectedGameEntryNoDuration));
+                    + ENDAMOUNT_VALID_ENDAMOUNT_1 + DATE_VALID_DATE_1
+                    + DURATION_VALID_DURATION_1, new AddCommand(expectedGameEntryNoLocation));
         } catch (Exception e) {
             System.out.println(e);
         }
