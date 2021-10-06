@@ -8,7 +8,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DURATION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_LOCATION;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_GAME_ENTRIES;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,10 +23,8 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.tag.Tag;
 
-import seedu.address.model.gameEntry.DatePlayed;
-import seedu.address.model.gameEntry.GameEntry;
-import seedu.address.model.gameEntry.GameType;
-import seedu.address.model.gameEntry.Location;
+import seedu.address.model.gameentry.DatePlayed;
+import seedu.address.model.gameentry.GameEntry;
 
 /**
  * Edits the details of an existing game entry in the game book.
@@ -55,18 +53,18 @@ public class EditCommand extends Command {
     public static final String MESSAGE_DUPLICATE_GAME = "This game already exists in the game book.";
 
     private final Index index;
-    private final EditGameDescriptor editGameDescriptor;
+    private final EditGameEntryDescriptor editGameEntryDescriptor;
 
     /**
      * @param index of the game in the filtered game list to edit
      * @param editGameDescriptor details to edit the game with
      */
-    public EditCommand(Index index, EditGameDescriptor editGameDescriptor) {
+    public EditCommand(Index index, EditGameEntryDescriptor editGameDescriptor) {
         requireNonNull(index);
         requireNonNull(editGameDescriptor);
 
         this.index = index;
-        this.editGameDescriptor = new EditGameDescriptor(editGameDescriptor);
+        this.editGameEntryDescriptor = new EditGameEntryDescriptor(editGameDescriptor);
     }
 
     @Override
@@ -89,7 +87,7 @@ public class EditCommand extends Command {
         model.setGameEntry(gameEntryToEdit, editedGameEntry);
 
         // edit "PERSONS"?
-        model.updateFilteredGameEntryList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredGameEntryList(PREDICATE_SHOW_ALL_GAME_ENTRIES);
         return new CommandResult(String.format(MESSAGE_EDIT_GAME_SUCCESS, editedGameEntry));
     }
 
@@ -97,17 +95,17 @@ public class EditCommand extends Command {
      * Creates and returns a {@code GameEntry} with the details of {@code gameEntryToEdit}
      * edited with {@code editGameEntryDescriptor}.
      */
-    private static GameEntry createEditedGameEntry(GameType gameEntryToEdit,
+    private static GameEntry createEditedGameEntry(GameEntry gameEntryToEdit,
             EditGameEntryDescriptor editGameEntryDescriptor) {
         assert gameEntryToEdit != null;
 
-        GameType updatedGameType = EditGameEntryDescriptor.getGameType().orElse(gameEntryToEdit.getGameType());
-        Double updatedStartAmount = EditGameEntryDescriptor.getStartAmount().orElse(gameEntryToEdit.getStartAmount());
-        Double updatedEndAmount = EditGameEntryDescriptor.getEndAmount().orElse(gameEntryToEdit.getEndAmount());
-        DatePlayed date = EditGameEntryDescriptor.getDate().orElse(gameEntryToEdit.getDate());
-        Integer updatedDuration = EditGameEntryDescriptor.getDuration().orElse(gameEntryToEdit.getDuration());
-        Location updatedLocation = EditGameEntryDescriptor.getLocation().orElse(gameEntryToEdit.getLocation());
-        Set<Tag> updatedTags = EditGameEntryDescriptor.getTags().orElse(gameEntryToEdit.getTags());
+        String updatedGameType = editGameEntryDescriptor.getGameType().orElse(gameEntryToEdit.getGameType());
+        Double updatedStartAmount = editGameEntryDescriptor.getStartAmount().orElse(gameEntryToEdit.getStartAmount());
+        Double updatedEndAmount = editGameEntryDescriptor.getEndAmount().orElse(gameEntryToEdit.getEndAmount());
+        DatePlayed date = editGameEntryDescriptor.getDate().orElse(gameEntryToEdit.getDate());
+        Integer updatedDuration = editGameEntryDescriptor.getDuration().orElse(gameEntryToEdit.getDurationMinutes());
+        String updatedLocation = editGameEntryDescriptor.getLocation().orElse(gameEntryToEdit.getLocation());
+        Set<Tag> updatedTags = editGameEntryDescriptor.getTags().orElse(gameEntryToEdit.getTags());
 
         return new GameEntry(updatedGameType, updatedStartAmount, updatedEndAmount, date,
                 updatedDuration, updatedLocation, updatedTags);
@@ -136,12 +134,12 @@ public class EditCommand extends Command {
      * corresponding field value of the game entry.
      */
     public static class EditGameEntryDescriptor {
-        private GameType gameType;
+        private String gameType;
         private Double startAmount;
         private Double endAmount;
         private DatePlayed date;
         private Integer durationMinutes;
-        private Location location;
+        private String location;
         private Set<Tag> tags;
 
         public EditGameEntryDescriptor() {}
@@ -167,11 +165,11 @@ public class EditCommand extends Command {
             return CollectionUtil.isAnyNonNull(gameType, startAmount, endAmount, date, durationMinutes, location, tags);
         }
 
-        public void setGameType(GameType gameType) {
+        public void setGameType(String gameType) {
             this.gameType = gameType;
         }
 
-        public Optional<GameType> getGameType() {
+        public Optional<String> getGameType() {
             return Optional.ofNullable(gameType);
         }
 
@@ -207,11 +205,11 @@ public class EditCommand extends Command {
             return Optional.ofNullable(durationMinutes);
         }
 
-        public void setLocation(Location location) {
+        public void setLocation(String location) {
             this.location = location;
         }
 
-        public Optional<Location> getLocation() {
+        public Optional<String> getLocation() {
             return Optional.ofNullable(location);
         }
 

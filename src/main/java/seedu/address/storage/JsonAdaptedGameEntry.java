@@ -1,7 +1,6 @@
 package seedu.address.storage;
 
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,10 +11,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
-import seedu.address.model.gameEntry.GameEntry;
-import seedu.address.model.gameEntry.GameType;
-import seedu.address.model.gameEntry.DatePlayed;
-import seedu.address.model.gameEntry.Location;
+import seedu.address.model.gameentry.DatePlayed;
+import seedu.address.model.gameentry.GameEntry;
+import seedu.address.model.gameentry.GameType;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -58,7 +56,7 @@ class JsonAdaptedGameEntry {
      * Converts a given {@code GameEntry} into this class for Jackson use.
      */
     public JsonAdaptedGameEntry(GameEntry source) {
-        gameType = source.getGameType().gameType;
+        gameType = source.getGameType();
         startAmount = String.valueOf(source.getStartAmount());
         endAmount = String.valueOf(source.getEndAmount());
         date = source.getDate().toString();
@@ -84,10 +82,8 @@ class JsonAdaptedGameEntry {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, GameType.class.getSimpleName()));
         }
         // todo: add validation check for gameType and MESSAGE_CONSTRAINTS to GameType class; possible usage below
-//        if (!GameType.isValidGameType(gameType)) {
-//            throw new IllegalValueException(GameType.MESSAGE_CONSTRAINTS);
-//        }
-        final GameType modelGameType = new GameType(gameType);
+
+        final String modelGameType = gameType;
 
         if (startAmount == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "start amount"));
@@ -117,7 +113,7 @@ class JsonAdaptedGameEntry {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "location"));
         }
         // todo: add input validation check for location (similar to gameType validation)
-        final Location modelLocation = new Location(location);
+        final String modelLocation = location;
 
         final Set<Tag> modelTags = new HashSet<>(gameEntryTags);
         return new GameEntry(modelGameType, modelStartAmount, modelEndAmount, modelDate, modelDurationMinutes,
